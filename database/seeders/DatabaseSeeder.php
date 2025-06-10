@@ -20,5 +20,18 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+            RoleAndPermissionSeeder::class,
+        ]);
+
+        // Create default super admin user
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $user->assignRole('super-admin');
     }
 }
