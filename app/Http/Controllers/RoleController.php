@@ -15,8 +15,9 @@ class RoleController extends Controller
 
     public function index()
     {
-        $roles = Role::with('permissions')->get();
-        return view('roles.index', compact('roles'));
+        $roles = Role::withCount('users')->with('permissions')->get();
+        $permissions = Permission::all();
+        return view('roles.index', compact('roles', 'permissions'));
     }
 
     public function create()
@@ -29,14 +30,14 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:roles,name',
-            'permissions' => 'required|array',
+            'permissions' => 'required|array'
         ]);
 
         $role = Role::create(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
 
         return redirect()->route('roles.index')
-            ->with('success', 'Role created successfully');
+            ->with('success', 'Role created successfully.');
     }
 
     public function edit(Role $role)
@@ -49,20 +50,25 @@ class RoleController extends Controller
     {
         $request->validate([
             'name' => 'required|unique:roles,name,' . $role->id,
-            'permissions' => 'required|array',
+            'permissions' => 'required|array'
         ]);
 
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
 
         return redirect()->route('roles.index')
-            ->with('success', 'Role updated successfully');
+            ->with('success', 'Role updated successfully.');
     }
 
     public function destroy(Role $role)
     {
+        if($role->name === 'super-admin') {
+            return redirect()->route('roles.index')
+                ->with('error', 'Cannot delete super-admin role.');
+        }
+
         $role->delete();
         return redirect()->route('roles.index')
-            ->with('success', 'Role deleted successfully');
+            ->with('success', 'Role deleted successfully.');
     }
 }

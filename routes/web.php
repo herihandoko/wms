@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,10 +22,19 @@ Route::get('/', function () {
     return auth()->check() ? redirect('/home') : redirect('/login');
 });
 
-Auth::routes();
+// Authentication routes with guest middleware
+Auth::routes(['register' => false]);
 
-Route::middleware(['auth'])->group(function () {
+// Protected routes
+Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    // User Management Routes
+    Route::resource('users', App\Http\Controllers\UserController::class);
 });

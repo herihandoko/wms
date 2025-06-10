@@ -1,64 +1,99 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">{{ __('WMS Login') }}</h4>
-                </div>
+<div class="auth-wrapper auth-cover">
+    <div class="auth-inner row m-0">
+        <!-- Brand logo-->
+        <a class="brand-logo" href="/">
+            <svg viewBox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="28">
+                <defs>
+                    <lineargradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%" y2="89.4879456%">
+                        <stop stop-color="#000000" offset="0%"></stop>
+                        <stop stop-color="#FFFFFF" offset="100%"></stop>
+                    </lineargradient>
+                    <lineargradient id="linearGradient-2" x1="64.0437835%" y1="46.3276743%" x2="37.373316%" y2="100%">
+                        <stop stop-color="#EEEEEE" stop-opacity="0" offset="0%"></stop>
+                        <stop stop-color="#FFFFFF" offset="100%"></stop>
+                    </lineargradient>
+                </defs>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g transform="translate(-400.000000, -178.000000)">
+                        <g transform="translate(400.000000, 178.000000)">
+                            <path class="text-primary" d="M-5.68434189e-14,2.84217094e-14 L39.1816085,2.84217094e-14 L69.3453773,32.2519224 L101.428699,2.84217094e-14 L138.784583,2.84217094e-14 L138.784199,29.8015838 C137.958931,37.3510206 135.784352,42.5567762 132.260463,45.4188507 C128.736573,48.2809251 112.33867,64.5239941 83.0667527,94.1480575 L56.2750821,94.1480575 L6.71554594,44.4188507 C2.46876683,39.9813776 0.345377275,35.1089553 0.345377275,29.8015838 C0.345377275,24.4942122 0.230251516,14.560351 -5.68434189e-14,2.84217094e-14 Z" style="fill: currentColor"></path>
+                            <path d="M69.3453773,32.2519224 L101.428699,1.42108547e-14 L138.784583,1.42108547e-14 L138.784199,29.8015838 C137.958931,37.3510206 135.784352,42.5567762 132.260463,45.4188507 C128.736573,48.2809251 112.33867,64.5239941 83.0667527,94.1480575 L56.2750821,94.1480575 L32.8435758,70.5039241 L69.3453773,32.2519224 Z" fill="url(#linearGradient-1)" opacity="0.2"></path>
+                            <polygon fill="#000000" opacity="0.049999997" points="69.3922914 32.4202615 32.8435758 70.5039241 54.0490008 16.1851325"></polygon>
+                            <polygon fill="#000000" opacity="0.099999994" points="69.3922914 32.4202615 32.8435758 70.5039241 58.3683556 20.7402338"></polygon>
+                            <polygon fill="url(#linearGradient-2)" opacity="0.099999994" points="101.428699 0 83.0667527 94.1480575 130.378721 47.0740288"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            <h2 class="brand-text text-primary ms-1">WMS</h2>
+        </a>
+        <!-- /Brand logo-->
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+        <!-- Left Text-->
+        <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
+            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5">
+                <img class="img-fluid" src="{{ asset('app-assets/images/pages/login-v2.svg') }}" alt="Login V2" />
+            </div>
+        </div>
+        <!-- /Left Text-->
 
-                        <div class="mb-4">
-                            <label for="email" class="form-label">{{ __('Email Address') }}</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+        <!-- Login-->
+        <div class="d-flex col-lg-4 align-items-center auth-bg px-2 p-lg-5">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
+                <h2 class="card-title fw-bold mb-1">Welcome to WMS! 👋</h2>
+                <p class="card-text mb-2">Please sign-in to your account and start managing warehouse</p>
+
+                <form class="auth-login-form mt-2" method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="mb-1">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control @error('email') is-invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" placeholder="admin@admin.com" aria-describedby="email" autofocus="" tabindex="1" required />
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" for="password">Password</label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}">
+                                    <small>Forgot Password?</small>
+                                </a>
+                            @endif
                         </div>
-
-                        <div class="mb-4">
-                            <label for="password" class="form-label">{{ __('Password') }}</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                        <div class="input-group input-group-merge form-password-toggle">
+                            <input class="form-control form-control-merge @error('password') is-invalid @enderror" id="password" type="password" name="password" placeholder="············" aria-describedby="password" tabindex="2" required/>
+                            <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label" for="remember">
-                                    {{ __('Remember Me') }}
-                                </label>
-                            </div>
+                    <div class="mb-1">
+                        <div class="form-check">
+                            <input class="form-check-input" id="remember" name="remember" type="checkbox" tabindex="3" {{ old('remember') ? 'checked' : '' }}/>
+                            <label class="form-check-label" for="remember"> Remember Me</label>
                         </div>
+                    </div>
 
-                        <div class="mb-0">
-                            <button type="submit" class="btn btn-primary w-100 mb-2">
-                                {{ __('Login') }}
-                            </button>
+                    <button class="btn btn-primary w-100" tabindex="4" type="submit">Sign in</button>
+                </form>
 
-                            @if (Route::has('password.request'))
-                                <div class="text-center">
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    </form>
+                <div class="divider my-2">
+                    <div class="divider-text">WMS System</div>
                 </div>
             </div>
         </div>
+        <!-- /Login-->
     </div>
 </div>
 @endsection
